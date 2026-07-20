@@ -29,7 +29,7 @@ export default function AdminDashboard() {
                 <h3 className="text-2.5xl font-bold text-[#1E1E1E] leading-none tracking-tight pt-2">
                   1170
                 </h3>
-                <span className="text-[10px] font-bold text-emerald-600 bg-white px-1.5 py-0.5 rounded border border-emerald-100/60 shadow-[0_1px_2px_rgba(0,0,0,0.01)] whitespace-nowrap ml-5">
+                <span className="text-[10px] font-bold text-emerald-600 bg-white px-1.5 py-0.5 rounded border border-emerald-100/60 shadow-[0_1px_2px_rgba(0,0,0,0.01)] whitespace-nowrap ml-8">
                   ▲ 15.7%{" "}
                   <span className="text-gray-400 font-normal ml-0.5">
                     vs last month
@@ -63,7 +63,7 @@ export default function AdminDashboard() {
                 <h3 className="text-2.5xl font-bold text-[#1E1E1E] leading-none tracking-tight pt-2">
                   800
                 </h3>
-                <span className="text-[10px] font-bold text-emerald-600 bg-white px-1.5 py-0.5 rounded border border-emerald-100/60 shadow-[0_1px_2px_rgba(0,0,0,0.01)] whitespace-nowrap ml-5">
+                <span className="text-[10px] font-bold text-emerald-600 bg-white px-1.5 py-0.5 rounded border border-emerald-100/60 shadow-[0_1px_2px_rgba(0,0,0,0.01)] whitespace-nowrap ml-6">
                   ▲ 78.8%{" "}
                   <span className="text-gray-400 font-normal ml-0.5">
                     completion rate
@@ -97,7 +97,7 @@ export default function AdminDashboard() {
                 <h3 className="text-2.5xl font-bold text-[#1E1E1E] leading-none tracking-tight pt-2">
                   600
                 </h3>
-                <span className="text-[10px] font-bold text-emerald-600 bg-white px-1.5 py-0.5 rounded border border-emerald-100/60 shadow-[0_1px_2px_rgba(0,0,0,0.01)] whitespace-nowrap ml-5">
+                <span className="text-[10px] font-bold text-emerald-600 bg-white px-1.5 py-0.5 rounded border border-emerald-100/60 shadow-[0_1px_2px_rgba(0,0,0,0.01)] whitespace-nowrap ml-10">
                   ▲ 12.1%{" "}
                   <span className="text-gray-400 font-normal ml-0.5">
                     PDF exports
