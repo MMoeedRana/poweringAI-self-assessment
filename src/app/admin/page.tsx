@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 export default function AdminDashboard() {
   return (
     <div className="min-h-screen flex flex-col font-sans antialiased selection:bg-[#FF6624]/10">

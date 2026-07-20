@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Plus, Pencil, Trash2, Check } from "lucide-react";
+import { ChevronDown, Plus, Pencil, Trash2, Check, X } from "lucide-react";
 
 interface RecommendationItem {
   id: string;
@@ -93,16 +93,39 @@ export default function RecommendationsPage() {
     },
   ]);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newRecommendation, setNewRecommendation] = useState({
+    category: "Ways of Working" as
+      | "Ways of Working"
+      | "Sales Tech & Tools"
+      | "People",
+    title: "",
+    description: "",
+  });
+
   const handleAddNewRecommendation = () => {
+    // Get the next number for the specific category
+    const categoryItems = recommendations.filter(
+      (r) => r.category === newRecommendation.category,
+    );
+    const nextNum = String(categoryItems.length + 1).padStart(2, "0");
+
     const newRec: RecommendationItem = {
       id: `rec-${Date.now()}`,
-      numStr: "04",
+      numStr: nextNum,
+      category: newRecommendation.category,
+      title: newRecommendation.title,
+      description: newRecommendation.description,
+      isEditing: false,
+    };
+
+    setRecommendations([...recommendations, newRec]);
+    setIsModalOpen(false);
+    setNewRecommendation({
       category: "Ways of Working",
       title: "",
       description: "",
-      isEditing: true,
-    };
-    setRecommendations([newRec, ...recommendations]);
+    });
   };
 
   const handleInputChange = (
@@ -127,12 +150,25 @@ export default function RecommendationsPage() {
     setRecommendations(recommendations.filter((r) => r.id !== id));
   };
 
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case "Ways of Working":
+        return "bg-orange-100 text-orange-700 border-orange-200";
+      case "Sales Tech & Tools":
+        return "bg-blue-100 text-blue-700 border-blue-200";
+      case "People":
+        return "bg-red-100 text-red-700 border-red-200";
+      default:
+        return "bg-gray-100 text-gray-700 border-gray-200";
+    }
+  };
+
   const renderCategoryGroup = (
     categoryTitle: "Ways of Working" | "Sales Tech & Tools" | "People",
   ) => {
-    const filtered = recommendations.filter(
-      (item) => item.category === categoryTitle,
-    );
+    const filtered = recommendations
+      .filter((item) => item.category === categoryTitle)
+      .sort((a, b) => parseInt(a.numStr) - parseInt(b.numStr));
 
     if (filtered.length === 0) return null;
 
@@ -247,7 +283,7 @@ export default function RecommendationsPage() {
           </div>
 
           <button
-            onClick={handleAddNewRecommendation}
+            onClick={() => setIsModalOpen(true)}
             className="bg-[#FF6624] text-white px-5 py-2.5 rounded-xl font-bold text-[13px] flex items-center gap-2 shadow-md shadow-orange-600/10 hover:bg-orange-600 transition-colors"
           >
             <Plus className="size-4" strokeWidth={2.5} />
@@ -261,6 +297,120 @@ export default function RecommendationsPage() {
           {renderCategoryGroup("People")}
         </div>
       </main>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            onClick={() => setIsModalOpen(false)}
+          />
+
+          <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-gray-200/80">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-[18px] font-extrabold text-gray-900 tracking-tight">
+                Add Recommendation
+              </h2>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <X className="size-5" strokeWidth={2} />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-black uppercase tracking-widest text-gray-400 mb-1.5">
+                  Category
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {["Ways of Working", "Sales Tech & Tools", "People"].map(
+                    (cat) => (
+                      <button
+                        key={cat}
+                        onClick={() =>
+                          setNewRecommendation({
+                            ...newRecommendation,
+                            category: cat as typeof newRecommendation.category,
+                          })
+                        }
+                        className={`px-3 py-2 rounded-xl text-[11px] font-bold transition-all ${
+                          newRecommendation.category === cat
+                            ? `bg-[#FF6624] text-white shadow-sm shadow-orange-600/20`
+                            : `bg-gray-50 text-gray-400 border border-gray-200 hover:bg-gray-100`
+                        }`}
+                      >
+                        {cat === "Ways of Working"
+                          ? "Working"
+                          : cat === "Sales Tech & Tools"
+                            ? "Tech & Tools"
+                            : "People"}
+                      </button>
+                    ),
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-black uppercase tracking-widest text-gray-400 mb-1.5">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  value={newRecommendation.title}
+                  onChange={(e) =>
+                    setNewRecommendation({
+                      ...newRecommendation,
+                      title: e.target.value,
+                    })
+                  }
+                  placeholder="e.g., Document your new-customer approach"
+                  className="w-full text-[13px] font-medium text-gray-900 border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#FF6624] transition-colors"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-black uppercase tracking-widest text-gray-400 mb-1.5">
+                  Description
+                </label>
+                <textarea
+                  value={newRecommendation.description}
+                  onChange={(e) =>
+                    setNewRecommendation({
+                      ...newRecommendation,
+                      description: e.target.value,
+                    })
+                  }
+                  placeholder="Provide actionable descriptive text instructions..."
+                  rows={3}
+                  className="w-full text-[13px] text-gray-600 border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#FF6624] transition-colors resize-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 mt-6 pt-4 border-t border-gray-100">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="flex-1 px-4 py-2.5 text-[13px] font-bold text-gray-400 hover:text-gray-600 rounded-xl hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddNewRecommendation}
+                disabled={!newRecommendation.title.trim()}
+                className={`flex-[2] px-6 py-2.5 rounded-xl font-bold text-[13px] flex items-center justify-center gap-2 transition-all whitespace-nowrap ${
+                  newRecommendation.title.trim()
+                    ? "bg-[#FF6624] text-white hover:bg-orange-600 shadow-md shadow-orange-600/20"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                }`}
+              >
+                <Plus className="size-4" strokeWidth={2.5} />
+                Add Recommendation
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
